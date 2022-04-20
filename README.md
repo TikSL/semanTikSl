@@ -3,4 +3,6 @@ Bot Discord pour jouer à semantle en francais.
 
 Le bot tourne avec Heroku.
 
-Données de Jean-Philippe Fauconnier https://fauconnier.github.io/#data.
+Inspiré de cémantix : https://cemantix.herokuapp.com/
+
+Données de Jean-Philippe Fauconnier : https://fauconnier.github.io/#data
