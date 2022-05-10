@@ -4,7 +4,7 @@ import discord
 
 import sauvegarde
 
-commandes = ('$play', '$ff', '$stop', '$help', '$info', '$regles')
+commandes = ('$play', '$ff', '$stop', '$help', '$info', '$regles', '$classement')
 
 content = '**But du jeu :**\n' \
           'Trouver le mot mystère en donnant des mots à la suite.\n' \
@@ -13,21 +13,22 @@ content = '**But du jeu :**\n' \
           'Dans un soucis de clarté, les mots accordés ont été retirés de la liste.\n' \
           'Vous ne cherchez donc qu\'un mot au masculin, au singulier ou non conjugué.\n\n' \
           '\U0001f6a7 **Bugs possibles :**\n' \
-          '- Si le bot n\'arrive pas à calculer les 1000 mots les plus proches, il ne commencera pas la partie mais créera un salon. ' \
+          '- Si le bot n\'arrive pas à calculer les 1000 mots les plus proches, ' \
+          'il ne commencera pas la partie mais créera un salon. ' \
           'Dans ce cas revenez dans un salon textuel général (là ou vous avez tapé *!play*) et tapez *!stop*. ' \
           'Vous pouvez alors relancer une partie.\n' \
-          '- Le joueur peut *!ff* même après une victoire.\n' \
           '- En théorie les accents comptent mais le dictionnaire utilisé est moyen.\n\n' \
           '\U0001f631 : mot le plus proche\n'\
           '\U0001f525 : top 10\n' \
           '\U0001f975 : top 100\n' \
           '\U0001f60e : top 1000\n' \
           '\U0001f976 : pas fou\n\n' \
-          '\u2699\uFE0F **Commandes :**\n' \
-          '!ff : abandonne pour voir le mot mystère\n' \
-          '!stop : arrête la partie sans donner le mot mystère\n' \
-          '!play : lance une partie\n' \
-          '!help : pour plus d\'informations\n\n' \
+          '\u2699\uFE0F **Commandes :**\n'\
+          '$play : lance une partie\n'\
+          '$ff : abandonne pour voir le mot mystère\n' \
+          '$stop : arrête la partie sans donner le mot mystère\n' \
+          '$regles : affiche ce message\n'\
+          '$classement : affiche les joueurs ayant finis une partie\n\n' \
           '	\U0001f340 Bonne chance ! \U0001f340'
 
 embed_regles = discord.Embed(description=content, colour=0x2ecc71)
@@ -133,18 +134,22 @@ def top100(joueur,partie):
 def leaderboard():
     name = ""
     nb_vict = ""
+    record = ""
     embed = discord.Embed(title="Classement",
                           description="Gagnez au moins une partie pour apparaitre dans le classement!",
                           colour= 0xf1c40f)
     winners = sauvegarde.get_lb()
-    medals = ["\U0001f947  ","\U0001f948  ","\U0001f949  ", ""]
+    if not winners:
+        return embed
+    medals = ["\U0001f947  ","\U0001f948  ","\U0001f949  ", ""] #Or, Argent, Bronze, Rien
     compteur = 0
     for winner in winners:
         name = name + medals[compteur] + winner[0] + '\n'
-        nb_vict = (nb_vict) + str(winner[1]) + '\n'
+        nb_vict = nb_vict + str(winner[1]) + '\n'
+        record = record + winner[2] + '\n'
         if compteur < 4 :
             compteur+=1
     embed.add_field(name='Joueur', value=name, inline=True)
     embed.add_field(name='\U0001f3c6', value=nb_vict, inline=True)
+    embed.add_field(name='Record', value=record, inline=True)
     return embed
-

@@ -1,15 +1,16 @@
-# Module permettant la sauvegarde des parties d'une journée à l'autre
 # Création d'un leader board
+# Note les heures de début de partie avec les id des salons correspondant
 
 
-def change_lb(playerName):
+def change_lb(playerName, essais):
     lb_file = open("leaderboard.txt", 'r', encoding='utf-8')
     replacement = ""
     for line in lb_file :
-        name, nbVict = line.split()
-        nbrVict = int(nbVict)
-        if name == playerName:
-            change = line.replace(str(int(nbVict)), str(int(nbVict)+1))
+        name, nbVict, record = line.split()
+        record = int(record)
+        if name == playerName or record > essais :
+            change = line.replace(name + ' ' + str(int(nbVict)) + ' ' + str(record),
+                                  name + ' ' + str(int(nbVict)+1) + ' ' + str(essais))
         else :
             change = line
         replacement = replacement + change
@@ -24,11 +25,12 @@ def get_lb():
     lb_file = open("leaderboard.txt", 'r', encoding='utf-8')
     winners = []
     for line in lb_file:
-        name, nbVict = line.split()
+        name, nbVict, record = line.split()
         nbVict = int(nbVict)
         if nbVict > 0 :
-            winners.append((name, nbVict))
+            winners.append((name, nbVict, record))
     winners.sort(key=lambda x: x[1], reverse = True)
+    lb_file.close()
     return winners
 
 
@@ -39,12 +41,14 @@ def ajout_joueur_lb(joueur):
         if joueur == line.split()[0]:
             return
 
-    lines.append(joueur + " 0" + '\n')
+    lines.append(joueur + " 0" + " 10000" + '\n')
     lb_file.close()
     lb_file = open("leaderboard.txt", "w", encoding='utf-8')
     for line in lines:
         lb_file.write(line)
     lb_file.close()
+
+
 
 
 

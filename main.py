@@ -39,11 +39,8 @@ class Semantiksl:
         await salon.send(embed=affichage.embed_regles)
         return joueur
 
-    def enlever_joueur(self, name):
-        for joueur in self.parties:
-            if joueur.name == name:
-                self.en_jeu.remove(name)
-        joueur = self.get_joueur(name)
+    def enlever_joueur(self, joueur):
+        self.en_jeu.remove(joueur.name)
         self.parties.remove(joueur)
         return
 
@@ -72,8 +69,8 @@ class Semantiksl:
                 await joueur.salon.send(embed=embed)
         try:
             if mot == joueur.mot_mystere:
-                joueur.victoire = True
-                sauvegarde.change_lb(joueur.name.name)
+                joueur.fini = True
+                sauvegarde.change_lb(joueur.name.name, joueur.nbr_essais + 1)
                 for embed in affichage.top100(joueur, jeu):
                     await joueur.salon.send(embed=embed)
                 await joueur.salon.send(
@@ -125,7 +122,7 @@ class Joueur:
         self.essais = []
         self.mot_mystere = dico.get_mot_mystere(jeu)
         self.top1000 = []
-        self.victoire = False
+        self.fini = False
 
 
     def trier_essais(self):
@@ -219,7 +216,11 @@ async def ff(ctx):
     pseudo = ctx.message.author
     if pseudo in jeu.en_jeu:
         joueur = jeu.get_joueur(pseudo)
-
+    else :
+        await ctx.send(pseudo.mention + ' vous n\'avez aucune partie en cours.')
+        affichage.infos(jeu, '!ff echec', pseudo)
+        return
+    if not joueur.fini:
         for embed in affichage.top100(joueur, jeu):
             await joueur.salon.send(embed=embed)
         await joueur.salon.send("Terrible \U0001f622 le mot mystère était : ||" + joueur.mot_mystere + "||")
@@ -230,10 +231,11 @@ async def ff(ctx):
         }
         await joueur.salon.edit(overwrites=overwrites)
         affichage.infos(jeu, '!ff succes', pseudo)
+        joueur.fini = True
     else:
         await ctx.send(pseudo.mention + ' vous n\'avez aucune partie en cours.')
         affichage.infos(jeu, '!ff echec', pseudo)
-    pass
+    return
 
 
 @bot.command()
@@ -245,9 +247,9 @@ async def stop(ctx):
     pseudo = ctx.message.author
     if pseudo in jeu.en_jeu:
         joueur = jeu.get_joueur(pseudo)
-        await ctx.send(joueur.mention + ' votre partie est supprimée.')
         await joueur.salon.delete()
         jeu.enlever_joueur(joueur)
+        await ctx.send(pseudo.mention + ' votre partie est supprimée.')
         affichage.infos(jeu, '!stop succes', pseudo)
     else:
         await ctx.send(pseudo.mention + ' vous n\'avez aucune partie en cours.')
@@ -278,7 +280,7 @@ async def regles(ctx):
 @bot.command()
 async def classement(ctx):
     """Affiche les joueurs ayant gagné une partie"""
-    await ctx.send(ctx.author.mention, embed=affichage.leaderboard())
+    await ctx.send(embed=affichage.leaderboard())
     pass
 
 
