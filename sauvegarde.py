@@ -8,9 +8,13 @@ def change_lb(playerName, essais):
     for line in lb_file :
         name, nbVict, record = line.split()
         record = int(record)
-        if name == playerName or record > essais :
-            change = line.replace(name + ' ' + str(int(nbVict)) + ' ' + str(record),
+        if name == playerName:
+            if record > essais:
+                change = line.replace(name + ' ' + str(int(nbVict)) + ' ' + str(record),
                                   name + ' ' + str(int(nbVict)+1) + ' ' + str(essais))
+            else:
+                change = line.replace(name + ' ' + str(int(nbVict)) + ' ' + str(record),
+                                      name + ' ' + str(int(nbVict) + 1) + ' ' + str(record))
         else :
             change = line
         replacement = replacement + change
@@ -24,7 +28,8 @@ def change_lb(playerName, essais):
 def get_lb():
     lb_file = open("leaderboard.txt", 'r', encoding='utf-8')
     winners = []
-    for line in lb_file:
+    lines = lb_file.readlines()
+    for line in lines:
         name, nbVict, record = line.split()
         nbVict = int(nbVict)
         if nbVict > 0 :
@@ -47,9 +52,3 @@ def ajout_joueur_lb(joueur):
     for line in lines:
         lb_file.write(line)
     lb_file.close()
-
-
-
-
-
-

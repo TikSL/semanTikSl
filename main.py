@@ -126,7 +126,7 @@ class Joueur:
 
 
     def trier_essais(self):
-        self.essais.sort(key=lambda x: x[2])
+        self.essais_eval.sort(key=lambda x: x[2]) #essai_eval???
         return
 
 
@@ -189,14 +189,14 @@ async def play(ctx, mode="solo"):
                 pseudo: discord.PermissionOverwrite(read_messages=True)
             }
             salon = await ctx.guild.create_text_channel('Partie de ' + pseudo.display_name + " (multi)", category=category,
-                                                        overwrite=overwrites)
+                                                        overwrites=overwrites)
         elif mode == 'solo':
             overwrites = {
                 ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
                 bot.user: discord.PermissionOverwrite(read_messages=True),
                 pseudo: discord.PermissionOverwrite(read_messages=True)
             }
-            salon = await ctx.guild.create_text_channel('Partie de ' + pseudo.display_name,category=category, overwrite=overwrites)
+            salon = await ctx.guild.create_text_channel('Partie de ' + pseudo.display_name,category=category, overwrites=overwrites)
         else:
             await ctx.send(pseudo.mention + " Erreur de commande : $play ou $play multi")
             return
@@ -229,7 +229,7 @@ async def ff(ctx):
             ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
             joueur.name: discord.PermissionOverwrite(send_messages=False, read_messages=True),
         }
-        await joueur.salon.edit(overwrites=overwrites)
+        await joueur.salon.edit(overwrite=overwrites)
         affichage.infos(jeu, '!ff succes', pseudo)
         joueur.fini = True
     else:
@@ -247,23 +247,13 @@ async def stop(ctx):
     pseudo = ctx.message.author
     if pseudo in jeu.en_jeu:
         joueur = jeu.get_joueur(pseudo)
+        await ctx.send(pseudo.mention + ' votre partie est supprimée.')
         await joueur.salon.delete()
         jeu.enlever_joueur(joueur)
-        await ctx.send(pseudo.mention + ' votre partie est supprimée.')
         affichage.infos(jeu, '!stop succes', pseudo)
     else:
         await ctx.send(pseudo.mention + ' vous n\'avez aucune partie en cours.')
         affichage.infos(jeu, '!stop echec', pseudo)
-    pass
-
-
-@commands.has_permissions(administrator=True)
-@bot.command()
-async def info(ctx):
-    """
-    Commande pour les admins. Ne pas spammer
-    """
-    affichage.infos(jeu, '!info', ctx.message.author)
     pass
 
 
@@ -281,6 +271,26 @@ async def regles(ctx):
 async def classement(ctx):
     """Affiche les joueurs ayant gagné une partie"""
     await ctx.send(embed=affichage.leaderboard())
+    pass
+
+@commands.has_permissions(administrator=True)
+@bot.command()
+async def info(ctx):
+    """
+    Commande pour les admins. Ne pas spammer
+    """
+    affichage.infos(jeu, '!info', ctx.message.author)
+    pass
+
+
+@commands.has_permissions(administrator=True)
+@bot.command()
+async def dl(ctx, nom_fichier):
+    """
+    Commande pour les admins. Ne pas spammer
+    """
+    fichier = nom_fichier +'.txt'
+    await ctx.send(file=discord.File(fichier))
     pass
 
 

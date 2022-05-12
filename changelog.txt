@@ -1,4 +1,5 @@
 2022/04/14 Version 1.0 Code sur Heroku
 2022/05/06 Version 1.1 Création des modules, épuration du code, bug top1000 fixé
 2022/05/09 Version 1.2 Création du classement, changement du préfixe de commande, modification de la classe joueur
-2022/06/10 Version 1.3 Parties multijoueurs, salon des parties dans une même catégorie, ajout des records au classement
+2022/05/10 Version 1.3 Parties multijoueurs, salon des parties dans une même catégorie, ajout des records au classement
+2022/05/12 Version 1.4 Amélioration du leaderboard, résolution bug $ff qui ne changeait pas les autorisations
