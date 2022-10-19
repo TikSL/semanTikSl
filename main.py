@@ -115,7 +115,7 @@ class Semantiksl:
 class Joueur:
 
     def __init__(self, name, salon):
-        self.name = name  #exemple: pseudo#0000
+        self.name = name  # exemple: pseudo#0000
         self.salon = salon
         self.nbr_essais = 0
         self.essais_eval = []
@@ -124,9 +124,8 @@ class Joueur:
         self.top1000 = []
         self.fini = False
 
-
     def trier_essais(self):
-        self.essais_eval.sort(key=lambda x: x[2]) #essai_eval???
+        self.essais_eval.sort(key=lambda x: x[2])  # essai_eval???
         return
 
 
@@ -169,12 +168,12 @@ async def on_message(message):
 @bot.command()
 async def play(ctx, mode="solo"):
     """
-    Créé une nouvelle partie avec le salon associé
-    Seul le joueur (et les administrateurs) ont accès à ce salon
-    Si le joueur a déjà une partie en cours alors un message d'erreur s'affiche
+    Créé une nouvelle partie avec le salon associé.
+    Seul le joueur (et les administrateurs) ont accès à ce salon.
+    Si le joueur a déjà une partie en cours alors un message d'erreur s'affiche.
     """
     pseudo = ctx.message.author
-    if pseudo in jeu.en_jeu:  #Verifie si le joueur a déjà une partie
+    if pseudo in jeu.en_jeu:  # Verifie si le joueur a déjà une partie
         joueur = jeu.get_joueur(pseudo)
         await ctx.send(joueur.name.mention + "Vous avez déjà une partie en cours :" + joueur.salon.mention +
                        '\nTapez *$stop* si vous voulez la supprimer.')
@@ -188,7 +187,8 @@ async def play(ctx, mode="solo"):
                 bot.user: discord.PermissionOverwrite(read_messages=True),
                 pseudo: discord.PermissionOverwrite(read_messages=True)
             }
-            salon = await ctx.guild.create_text_channel('Partie de ' + pseudo.display_name + " (multi)", category=category,
+            salon = await ctx.guild.create_text_channel('Partie de ' + pseudo.display_name + " (multi)",
+                                                        category=category,
                                                         overwrites=overwrites)
         elif mode == 'solo':
             overwrites = {
@@ -196,7 +196,8 @@ async def play(ctx, mode="solo"):
                 bot.user: discord.PermissionOverwrite(read_messages=True),
                 pseudo: discord.PermissionOverwrite(read_messages=True)
             }
-            salon = await ctx.guild.create_text_channel('Partie de ' + pseudo.display_name,category=category, overwrites=overwrites)
+            salon = await ctx.guild.create_text_channel('Partie de ' + pseudo.display_name, category=category,
+                                                        overwrites=overwrites)
         else:
             await ctx.send(pseudo.mention + " Erreur de commande : $play ou $play multi")
             return
@@ -216,7 +217,7 @@ async def ff(ctx):
     pseudo = ctx.message.author
     if pseudo in jeu.en_jeu:
         joueur = jeu.get_joueur(pseudo)
-    else :
+    else:
         await ctx.send(pseudo.mention + ' vous n\'avez aucune partie en cours.')
         affichage.infos(jeu, '!ff echec', pseudo)
         return
@@ -273,6 +274,7 @@ async def classement(ctx):
     await ctx.send(embed=affichage.leaderboard())
     pass
 
+
 @commands.has_permissions(administrator=True)
 @bot.command()
 async def info(ctx):
@@ -289,7 +291,7 @@ async def dl(ctx, nom_fichier):
     """
     Commande pour les admins. Ne pas spammer
     """
-    fichier = nom_fichier +'.txt'
+    fichier = nom_fichier + '.txt'
     await ctx.send(file=discord.File(fichier))
     pass
 
