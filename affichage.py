@@ -101,10 +101,11 @@ def liste_discord(liste):
 
     return liste_embed
 
-def top100(joueur,partie):
+
+def top100(joueur, partie):
     top = [(joueur.top1000[i],
             round(partie.model.similarity(joueur.mot_mystere, joueur.top1000[i]) * 100, 2)) for i in range(99)]
-    top.sort(key=lambda x: x[1])
+    top.sort(key=lambda l: l[1])
     liste_embed = []
     i = 1
     score = ''
@@ -131,25 +132,26 @@ def top100(joueur,partie):
 
     return liste_embed
 
+
 def leaderboard():
     name = ""
-    nb_vict = ""
+    nbr_victoires = ""
     record = ""
     embed = discord.Embed(title="Classement",
                           description="Gagnez au moins une partie pour apparaitre dans le classement!",
-                          colour= 0xf1c40f)
+                          colour=0xf1c40f)
     winners = sauvegarde.get_lb()
     if not winners:
         return embed
-    medals = ["\U0001f947  ","\U0001f948  ","\U0001f949  ", ""] #Or, Argent, Bronze, Rien
+    medals = ["\U0001f947  ", "\U0001f948  ", "\U0001f949  ", ""]  # Or, Argent, Bronze, Rien
     compteur = 0
     for winner in winners:
         name = name + medals[compteur] + winner[0] + '\n'
-        nb_vict = nb_vict + str(winner[1]) + '\n'
+        nbr_victoires = nbr_victoires + str(winner[1]) + '\n'
         record = record + winner[2] + '\n'
-        if compteur < 4 :
-            compteur+=1
+        if compteur < 4:
+            compteur += 1
     embed.add_field(name='Joueur', value=name, inline=True)
-    embed.add_field(name='\U0001f3c6', value=nb_vict, inline=True)
+    embed.add_field(name='\U0001f3c6', value=nbr_victoires, inline=True)
     embed.add_field(name='Record', value=record, inline=True)
     return embed

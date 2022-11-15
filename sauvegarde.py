@@ -2,20 +2,20 @@
 # Note les heures de début de partie avec les id des salons correspondant
 
 
-def change_lb(playerName, essais):
+def change_lb(player_name, essais):
     lb_file = open("leaderboard.txt", 'r', encoding='utf-8')
     replacement = ""
-    for line in lb_file :
-        name, nbVict, record = line.split()
+    for line in lb_file:
+        name, nbr_victoires, record = line.split()
         record = int(record)
-        if name == playerName:
+        if name == player_name:
             if record > essais:
-                change = line.replace(name + ' ' + str(int(nbVict)) + ' ' + str(record),
-                                  name + ' ' + str(int(nbVict)+1) + ' ' + str(essais))
+                change = line.replace(name + ' ' + str(int(nbr_victoires)) + ' ' + str(record),
+                                      name + ' ' + str(int(nbr_victoires)+1) + ' ' + str(essais))
             else:
-                change = line.replace(name + ' ' + str(int(nbVict)) + ' ' + str(record),
-                                      name + ' ' + str(int(nbVict) + 1) + ' ' + str(record))
-        else :
+                change = line.replace(name + ' ' + str(int(nbr_victoires)) + ' ' + str(record),
+                                      name + ' ' + str(int(nbr_victoires) + 1) + ' ' + str(record))
+        else:
             change = line
         replacement = replacement + change
     lb_file.close()
@@ -30,11 +30,11 @@ def get_lb():
     winners = []
     lines = lb_file.readlines()
     for line in lines:
-        name, nbVict, record = line.split()
-        nbVict = int(nbVict)
-        if nbVict > 0 :
-            winners.append((name, nbVict, record))
-    winners.sort(key=lambda x: x[1], reverse = True)
+        name, nbr_victoires, record = line.split()
+        nbr_victoires = int(nbr_victoires)
+        if nbr_victoires > 0:
+            winners.append((name, nbr_victoires, record))
+    winners.sort(key=lambda x: x[1], reverse=True)
     lb_file.close()
     return winners
 

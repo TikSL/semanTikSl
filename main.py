@@ -173,7 +173,7 @@ async def play(ctx, mode="solo"):
     Si le joueur a déjà une partie en cours alors un message d'erreur s'affiche.
     """
     pseudo = ctx.message.author
-    if pseudo in jeu.en_jeu:  # Verifie si le joueur a déjà une partie
+    if pseudo in jeu.en_jeu:  # Vérifie si le joueur joue déjà une partie
         joueur = jeu.get_joueur(pseudo)
         await ctx.send(joueur.name.mention + "Vous avez déjà une partie en cours :" + joueur.salon.mention +
                        '\nTapez *$stop* si vous voulez la supprimer.')
@@ -300,4 +300,4 @@ jeu = Semantiksl()
 
 print("Les dictionnaires sont chargés")
 
-bot.run("")
+bot.run(" ")
